@@ -1,0 +1,1265 @@
+/* ==========================================================================
+   Le 13'OR bar — Nantes
+   Direction artistique : « La pierre et la boiserie »
+   Palette tirée de la façade réelle : pierre blanc-or de l'immeuble,
+   boiserie bleu profond de la devanture, feuille d'or de l'enseigne,
+   crème de la carte imprimée, nuit. Objets imprimés punaisés (polaroid,
+   flyer, plan), tampon, équerres, grain de sérigraphie. Pas d'animation.
+   ========================================================================== */
+
+/* ---------- Polices auto-hébergées (aucun appel à un domaine tiers) ------- */
+@font-face {
+  font-family: 'Bodoni Moda';
+  src: url('../fonts/bodonimoda.woff2') format('woff2');
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Bodoni Moda';
+  src: url('../fonts/bodonimoda-italic.woff2') format('woff2');
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face { font-family: 'Jost'; src: url('../fonts/jost-300.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Jost'; src: url('../fonts/jost-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Jost'; src: url('../fonts/jost-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Jost'; src: url('../fonts/jost-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Jost'; src: url('../fonts/jost-400i.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+
+/* ---------- Jetons ------------------------------------------------------- */
+:root {
+  /* papiers — tirés de la façade réelle */
+  --pierre:    #EBE2C9;   /* pierre blanc-or de l'immeuble */
+  --boiserie:  #16294E;   /* bleu profond de la devanture peinte */
+  --nuit:      #0D0F20;   /* devanture au soir */
+  --nuit-2:    #14162B;
+  --papier:    #F1EBDD;   /* crème de carte imprimée */
+  --papier-2:  #E9E1CE;
+
+  /* encres */
+  --or:        #C9AC62;   /* feuille d'or de l'enseigne */
+  --or-vif:    #E8CF8D;
+  --or-pale:   #F0E3BC;
+  --encre:     #191A5E;   /* encre bleue sur papier crème */
+  --encre-2:   #3F3F8F;
+  --craie:     #EFEAE0;
+  --craie-2:   #A9A69B;
+
+  --ff-titre: 'Bodoni Moda', 'Didot', 'Times New Roman', serif;
+  --ff-texte: 'Jost', 'Century Gothic', 'Futura', -apple-system, sans-serif;
+
+  --marge: clamp(1.25rem, 5vw, 6rem);
+  --max: 1400px;
+
+  --t-lent: 900ms cubic-bezier(.19,1,.22,1);
+  --t-moyen: 480ms cubic-bezier(.22,.61,.36,1);
+  --t-court: 200ms cubic-bezier(.22,.61,.36,1);
+
+  /* grain de sérigraphie */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)' opacity='.55'/%3E%3C/svg%3E");
+}
+
+/* ---------- Base --------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--nuit);
+  color: var(--craie);
+  font-family: var(--ff-texte);
+  font-weight: 300;
+  font-size: clamp(1rem, .95rem + .25vw, 1.11rem);
+  line-height: 1.68;
+  letter-spacing: .012em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* grain global — la matière de la sérigraphie */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--grain);
+  background-size: 240px;
+  pointer-events: none;
+  opacity: .07;
+  z-index: 2000;
+  mix-blend-mode: overlay;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+
+h1, h2, h3, h4 {
+  font-family: var(--ff-titre);
+  font-weight: 800;
+  line-height: .92;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+
+p { margin: 0 0 1.15em; }
+p:last-child { margin-bottom: 0; }
+
+::selection { background: var(--or); color: var(--nuit); }
+
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+.evite {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--or); color: var(--nuit);
+  padding: .8rem 1.2rem; z-index: 9999; font-weight: 600;
+}
+.evite:focus { left: 1rem; top: 1rem; }
+
+.conteneur { width: min(100% - (var(--marge) * 2), var(--max)); margin-inline: auto; }
+
+/* ---------- Vocabulaire -------------------------------------------------- */
+
+.sur-titre {
+  font-size: clamp(.66rem, .6rem + .18vw, .78rem);
+  font-weight: 500;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  margin: 0 0 1.6rem;
+}
+
+.mention { font-size: .76rem; letter-spacing: .05em; line-height: 1.6; opacity: .72; }
+
+.todo-inline {
+  display: inline-block;
+  border: 1px dashed currentColor;
+  padding: .05em .5em;
+  font-size: .8em;
+  font-weight: 500;
+  opacity: .85;
+}
+
+/* équerres d'angle — reprises de la carte imprimée */
+.equerres { position: relative; }
+.equerres::before, .equerres::after {
+  content: '';
+  position: absolute;
+  width: clamp(26px, 3.5vw, 46px);
+  height: clamp(26px, 3.5vw, 46px);
+  border: 3px solid currentColor;
+  pointer-events: none;
+}
+.equerres::before { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.equerres::after  { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+/* tampon rond tournant */
+.tampon {
+  position: absolute;
+  width: clamp(110px, 13vw, 190px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  z-index: 5;
+}
+.tampon svg { width: 100%; height: 100%; }
+
+/* boutons — pavés d'affiche */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  padding: 1.05rem 2rem;
+  background: var(--or);
+  color: var(--nuit);
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid var(--or);
+  cursor: pointer;
+  transition: transform var(--t-court), box-shadow var(--t-court), background var(--t-court), color var(--t-court);
+  box-shadow: 4px 4px 0 rgba(0,0,0,.28);
+}
+.btn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 rgba(0,0,0,.3); }
+.btn:active { transform: translate(1px,1px); box-shadow: 2px 2px 0 rgba(0,0,0,.3); }
+
+.btn--contour { background: transparent; color: currentColor; border-color: currentColor; box-shadow: none; }
+.btn--contour:hover { background: var(--or); border-color: var(--or); color: var(--nuit); box-shadow: 5px 5px 0 rgba(0,0,0,.25); }
+
+.lien {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--or);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--t-court);
+}
+.lien:hover { text-decoration-color: currentColor; }
+
+/* ---------- En-tête ------------------------------------------------------ */
+.entete {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem var(--marge);
+  background: var(--nuit);
+  box-shadow: 0 1px 0 rgba(201,172,98,.35);
+  transition: padding var(--t-moyen), box-shadow var(--t-moyen);
+}
+.entete.est-posee {
+  box-shadow: 0 1px 0 rgba(201,172,98,.35), 0 12px 30px rgba(0,0,0,.35);
+  padding-block: .7rem;
+}
+
+.marque {
+  font-family: var(--ff-titre);
+  color: var(--or-vif);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: .3em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.marque .m-le  { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500; }
+.marque .m-nom { font-size: 1.5rem; font-weight: 800; }
+.marque .m-bar { font-size: .85rem; font-weight: 600; }
+
+.nav-bureau { display: flex; align-items: center; gap: clamp(1rem, 2.2vw, 2.6rem); }
+.nav-bureau a {
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--craie);
+  padding-block: .3rem;
+  border-bottom: 2px solid transparent;
+  transition: color var(--t-court), border-color var(--t-court);
+}
+.nav-bureau a:hover { color: var(--or-vif); }
+.nav-bureau a.est-actif { color: var(--or-vif); border-bottom-color: var(--or-vif); }
+
+.burger {
+  display: none;
+  width: 46px; height: 46px;
+  background: var(--or);
+  border: 0;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 3px 3px 0 rgba(0,0,0,.3);
+}
+.burger span {
+  position: absolute; left: 50%;
+  width: 20px; height: 2px;
+  background: var(--nuit);
+  transform: translateX(-50%);
+  transition: transform var(--t-moyen), opacity var(--t-court);
+}
+.burger span:nth-child(1) { top: 16px; }
+.burger span:nth-child(2) { top: 22px; }
+.burger span:nth-child(3) { top: 28px; }
+.burger[aria-expanded="true"] span:nth-child(1) { transform: translateX(-50%) translateY(6px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] span:nth-child(3) { transform: translateX(-50%) translateY(-6px) rotate(-45deg); }
+
+/* menu mobile = devanture plein écran */
+.menu-mobile {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--boiserie);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem var(--marge) 3rem;
+  display: none;
+}
+.menu-mobile::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--grain);
+  background-size: 240px;
+  opacity: .12;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.menu-mobile.est-ouvert { display: flex; }
+.menu-mobile nav { display: flex; flex-direction: column; }
+.menu-mobile nav a {
+  font-family: var(--ff-titre);
+  font-size: clamp(2.2rem, 10vw, 3.4rem);
+  font-weight: 800;
+  color: var(--or-pale);
+  text-decoration: none;
+  padding: .22em 0;
+  border-bottom: 1px solid rgba(240,227,188,.3);
+}
+.menu-mobile .mm-pied { margin-top: 2.2rem; font-size: .84rem; letter-spacing: .08em; color: var(--or-pale); }
+.menu-mobile .mm-pied a { color: #fff; }
+
+/* ---------- HERO : la pierre et la boiserie -------------------------------
+   Même langage que le reste du site : papier clair, encre bleu profond,
+   photo punaisée, tampon, ombres dures. ------------------------------------ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  background: var(--pierre);
+  color: var(--boiserie);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: clamp(5.5rem, 10vh, 7.5rem);
+}
+
+.hero-scene {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(2rem, 4vh, 3.5rem);
+}
+
+.hero-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2.5rem, 5vw, 5.5rem);
+  align-items: center;
+  width: 100%;
+}
+
+.hero-sur {
+  font-size: clamp(.66rem, .6rem + .2vw, .8rem);
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  margin: 0 0 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.hero-sur::after {
+  content: '';
+  flex: 0 1 140px;
+  height: 2px;
+  background: var(--boiserie);
+}
+
+.hero-titre { line-height: .82; margin-bottom: clamp(1.6rem, 3vh, 2.4rem); }
+.hero-titre span { display: block; }
+.hero-titre .ht-le {
+  font-family: var(--ff-titre);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 1rem + 2.6vw, 3.4rem);
+  color: #B03A2E;
+  margin-bottom: .1em;
+  margin-left: .1em;
+}
+.hero-titre .ht-nom {
+  font-family: var(--ff-titre);
+  font-weight: 800;
+  font-size: clamp(4.4rem, 1.5rem + 13.5vw, 12.5rem);
+  letter-spacing: -.03em;
+  color: var(--boiserie);
+  transform: rotate(-2deg);
+  transform-origin: left bottom;
+  text-shadow: .038em .038em 0 var(--or);
+}
+.hero-titre .ht-bar {
+  font-family: var(--ff-titre);
+  font-weight: 700;
+  font-size: clamp(1.2rem, .8rem + 2.4vw, 2.6rem);
+  letter-spacing: .6em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1.3px var(--boiserie);
+  margin-top: .55em;
+  margin-left: .15em;
+}
+
+.hero-phrase {
+  font-size: clamp(1.02rem, .92rem + .5vw, 1.32rem);
+  font-weight: 400;
+  max-width: 40ch;
+  margin: 0 0 clamp(1.6rem, 3vh, 2.4rem);
+  line-height: 1.55;
+}
+.hero-phrase em { font-style: italic; font-family: var(--ff-titre); font-size: 1.1em; color: #B03A2E; }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+.hero .btn { box-shadow: 4px 4px 0 var(--boiserie); border-color: var(--boiserie); }
+.hero .btn:hover { box-shadow: 7px 7px 0 var(--boiserie); }
+.hero .btn--contour { color: var(--boiserie); border-color: var(--boiserie); box-shadow: none; }
+.hero .btn--contour:hover { background: var(--boiserie); border-color: var(--boiserie); color: var(--pierre); box-shadow: 5px 5px 0 rgba(22,41,78,.3); }
+
+/* la photo de la devanture, punaisée comme dans la section Lieu */
+.hero-photo { position: relative; }
+.hero-photo .polaroid { transform: rotate(2.2deg); margin: 0; }
+.hero-photo .tampon {
+  right: -8%;
+  top: -9%;
+  color: var(--boiserie);
+}
+
+/* pied de la hero : la boiserie — bande bleu profond, lettres d'or */
+.hero-pied {
+  position: relative;
+  z-index: 2;
+  background: var(--boiserie);
+  border-top: 3px solid var(--or);
+}
+.hero-pied .conteneur {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .6rem 2.5rem;
+  padding-block: 1.15rem;
+  font-size: clamp(.72rem, .66rem + .2vw, .84rem);
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--or-vif);
+}
+.hero-pied a { color: var(--or-pale); text-decoration: none; border-bottom: 1px solid var(--or); }
+
+/* ---------- Bandeau défilant — bande d'or -------------------------------- */
+.bandeau {
+  background: var(--or);
+  color: var(--nuit);
+  overflow: hidden;
+  padding: .85rem 0;
+  border-block: 3px solid var(--nuit);
+}
+.bandeau-piste { display: flex; flex-wrap: wrap; justify-content: center; row-gap: .2rem; }
+.bandeau-piste span {
+  font-family: var(--ff-titre);
+  font-weight: 700;
+  font-size: clamp(1rem, .9rem + .5vw, 1.45rem);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding-inline: 1.4rem;
+  white-space: nowrap;
+}
+.bandeau-piste span:not(:last-child)::after { content: '✦'; margin-left: 2.8rem; font-size: .7em; vertical-align: .12em; }
+
+/* ---------- Sections génériques ------------------------------------------ */
+.section { position: relative; padding-block: clamp(4.5rem, 10vw, 9rem); overflow: hidden; }
+
+/* papier crème — la carte imprimée */
+.section--papier {
+  background: var(--papier);
+  color: var(--encre);
+}
+.section--papier .mention { color: var(--encre-2); opacity: 1; }
+.section--papier .sur-titre { color: var(--encre); }
+.section--papier .sur-titre::after { background: var(--encre); }
+
+/* nuit — la devanture */
+.section--nuit { background: var(--nuit); }
+
+/* pierre — le blanc-or de la façade */
+.section--pierre { background: var(--pierre); color: var(--boiserie); }
+
+.titre-section {
+  font-size: clamp(2.6rem, 1.2rem + 6.5vw, 7rem);
+  letter-spacing: -.02em;
+}
+.titre-section em { font-style: italic; font-weight: 400; }
+.section--papier .titre-section em { color: #B03A2E; }
+.section--nuit .titre-section { color: var(--or-vif); }
+.section--nuit .titre-section em { color: var(--craie); }
+.section--pierre .titre-section { color: var(--boiserie); }
+.section--pierre .titre-section em { color: #B03A2E; }
+
+.chapeau {
+  font-size: clamp(1.05rem, .95rem + .45vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+/* ---------- LE COMPTOIR (papier) ----------------------------------------- */
+.comptoir-grille {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+.comptoir-texte { position: relative; z-index: 1; }
+.comptoir-texte .titre-section { margin-bottom: clamp(1.6rem, 3vw, 2.6rem); max-width: 12ch; }
+.comptoir-texte p + p { margin-top: 1.1em; }
+.lettrine::first-letter {
+  font-family: var(--ff-titre);
+  font-size: 3.9em;
+  font-weight: 800;
+  float: left;
+  line-height: .74;
+  padding: .08em .14em 0 0;
+  color: #B03A2E;
+}
+
+/* colonne chiffres façon programme */
+.comptoir-programme {
+  position: sticky;
+  top: 7rem;
+  border: 3px solid var(--encre);
+  background: var(--papier);
+  box-shadow: 8px 8px 0 var(--encre);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+.comptoir-programme h3 {
+  font-size: clamp(1.3rem, 1.1rem + 1vw, 1.9rem);
+  border-bottom: 3px solid var(--encre);
+  padding-bottom: .5rem;
+  margin-bottom: .4rem;
+}
+.comptoir-programme ol { list-style: none; margin: 0; padding: 0; }
+.comptoir-programme li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: .85rem;
+  border-bottom: 1px solid rgba(25,26,94,.28);
+}
+.comptoir-programme li:last-child { border-bottom: 0; }
+.comptoir-programme .cp-nb {
+  font-family: var(--ff-titre);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 1.5rem + 1.6vw, 3rem);
+  line-height: 1;
+}
+.comptoir-programme .cp-nom {
+  font-size: .74rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  text-align: right;
+}
+/* ---------- EXTRAIT DE CARTE (papier, continue) --------------------------- */
+.extrait-tete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  margin-bottom: clamp(2.2rem, 5vw, 3.6rem);
+}
+.section--papier .btn { background: var(--encre); border-color: var(--encre); color: var(--papier); box-shadow: 4px 4px 0 rgba(25,26,94,.25); }
+.section--papier .btn--contour { background: transparent; color: var(--encre); }
+.section--papier .btn--contour:hover { background: var(--encre); color: var(--papier); }
+
+.colonnes-carte {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  border: 3px solid var(--encre);
+}
+.bloc-carte {
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  border-right: 3px solid var(--encre);
+}
+.bloc-carte:last-child { border-right: 0; }
+.bloc-carte h3 {
+  font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.3rem);
+  margin-bottom: .2rem;
+}
+.bloc-carte .bc-note {
+  display: block;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: #B03A2E;
+  margin-bottom: 1.4rem;
+}
+
+.liste-prix { list-style: none; margin: 0; padding: 0; }
+.liste-prix li { padding-block: .6rem; border-bottom: 1px solid rgba(25,26,94,.25); }
+.liste-prix li:last-child { border-bottom: 0; }
+.lp-ligne { display: flex; align-items: baseline; gap: .6rem; font-size: .98rem; }
+.lp-nom { font-weight: 500; }
+.lp-points { flex: 1; border-bottom: 2px dotted rgba(25,26,94,.4); transform: translateY(-.28em); min-width: 1.2rem; }
+.lp-prix { font-family: var(--ff-titre); font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.lp-detail { display: block; margin-top: .18rem; font-size: .8rem; font-style: italic; opacity: .8; line-height: 1.45; max-width: 44ch; }
+
+/* ---------- LE GIN (pierre blanc-or) --------------------------------------- */
+.gin { border-block: 3px solid var(--boiserie); }
+.gin .sur-titre { color: #B03A2E; }
+.gin-grille {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+.gin-intro .titre-section { transform: rotate(-1.5deg); margin-bottom: 1.6rem; }
+.gin-intro .chapeau { max-width: 46ch; }
+
+.gin-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2;
+  column-gap: clamp(1.6rem, 3.5vw, 3.2rem);
+}
+.gin-liste li {
+  break-inside: avoid;
+  display: flex;
+  align-items: baseline;
+  gap: .55rem;
+  padding-block: .55rem;
+  border-bottom: 1px solid rgba(22,41,78,.3);
+  font-size: .95rem;
+  font-weight: 400;
+}
+.gin-liste .g-nom { color: var(--boiserie); font-weight: 500; }
+.gin-liste .g-points { flex: 1; border-bottom: 2px dotted rgba(22,41,78,.4); transform: translateY(-.28em); min-width: .9rem; }
+.gin-liste .g-prix { font-family: var(--ff-titre); font-weight: 700; color: var(--boiserie); font-variant-numeric: tabular-nums; }
+
+/* ---------- OPEN-ART (nuit) ----------------------------------------------- */
+.prog-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+.prog-texte .titre-section { margin-bottom: 1.6rem; max-width: 12ch; }
+.prog-texte .chapeau { color: var(--craie); max-width: 48ch; }
+.prog-texte p { max-width: 48ch; }
+.prog-encart {
+  margin-top: 1.8rem;
+  padding: 1.2rem 1.4rem;
+  border: 1px dashed rgba(201,172,98,.6);
+  font-size: .84rem;
+  color: var(--craie-2);
+  line-height: 1.6;
+}
+.prog-encart strong { color: var(--or-vif); font-weight: 500; }
+
+/* l'affiche du 21 juin, comme punaisée — boiserie bleu profond, lettres d'or */
+.affiche-flyer {
+  position: relative;
+  background: var(--boiserie);
+  color: #fff;
+  padding: clamp(2rem, 4.5vw, 3.4rem);
+  transform: rotate(2deg);
+  box-shadow: 14px 18px 40px rgba(0,0,0,.45);
+}
+.affiche-flyer::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--grain);
+  background-size: 240px;
+  opacity: .14;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.affiche-flyer .equerres-in { position: absolute; inset: 12px; border: 0; }
+.affiche-titre {
+  font-family: var(--ff-titre);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 1.4rem + 6vw, 5.4rem);
+  line-height: .84;
+  color: var(--or-vif);
+  text-shadow: .04em .04em 0 rgba(6,12,26,.9);
+}
+.affiche-titre span { display: block; }
+.affiche-titre span:nth-child(2) { margin-left: .9em; transform: rotate(-2deg); }
+.affiche-sous {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-top: 1.6rem;
+}
+.affiche-liste { list-style: none; margin: 1.2rem 0 0; padding: 0; position: relative; z-index: 1; }
+.affiche-liste li {
+  display: flex;
+  gap: 1.2rem;
+  padding-block: .68rem;
+  border-top: 1px solid rgba(240,227,188,.45);
+  font-size: .9rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.affiche-liste li span:first-child { color: var(--or-vif); min-width: 3.2em; font-family: var(--ff-titre); font-weight: 700; }
+.affiche-note { font-size: .7rem; letter-spacing: .08em; margin-top: 1.4rem; color: rgba(255,255,255,.75); position: relative; z-index: 1; }
+
+/* ---------- LE LIEU (papier) ---------------------------------------------- */
+.lieu-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+.lieu-texte .titre-section { margin-bottom: 1.6rem; }
+.lieu-texte .chapeau, .lieu-texte p { max-width: 48ch; }
+
+/* photo en polaroid punaisé */
+.polaroid {
+  background: #fff;
+  padding: 14px 14px 58px;
+  transform: rotate(-2.4deg);
+  box-shadow: 12px 16px 34px rgba(25,26,94,.28);
+  max-width: 520px;
+  margin-inline: auto;
+  position: relative;
+}
+.polaroid img { width: 100%; }
+.polaroid figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 16px;
+  text-align: center;
+  font-family: var(--ff-titre);
+  font-style: italic;
+  font-size: .95rem;
+  color: var(--encre);
+}
+
+.fresque-encart {
+  margin-top: 2.2rem;
+  border: 3px solid var(--encre);
+  background: var(--papier-2);
+  padding: 1.4rem 1.6rem;
+  box-shadow: 6px 6px 0 var(--encre);
+}
+.fresque-encart h3 { font-size: 1.25rem; margin-bottom: .5rem; }
+.fresque-encart p { font-size: .92rem; }
+.fresque-encart svg { width: 100%; height: auto; margin-bottom: .9rem; }
+
+/* ---------- INFOS (nuit) --------------------------------------------------- */
+.infos-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: start;
+}
+.infos-grille .titre-section { margin-bottom: 1.8rem; }
+
+.horaires { list-style: none; margin: 0; padding: 0; }
+.horaires li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: .74rem;
+  border-bottom: 1px solid rgba(201,172,98,.3);
+  font-size: .96rem;
+}
+.horaires li:first-child { border-top: 1px solid rgba(201,172,98,.3); }
+.horaires .h-jour { letter-spacing: .1em; text-transform: uppercase; font-size: .82rem; font-weight: 500; }
+.horaires .h-heure { font-family: var(--ff-titre); font-weight: 700; color: var(--or-vif); font-variant-numeric: tabular-nums; }
+.horaires li.est-ferme { opacity: .5; }
+.horaires li.est-ferme .h-heure { color: var(--craie-2); }
+
+.coords { margin-top: 2rem; display: grid; gap: 1.3rem; }
+.coords dt {
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: .3rem;
+}
+.coords dd { margin: 0; font-size: .98rem; line-height: 1.55; }
+
+/* carte Google Maps — bloquée avant le clic (façade sans traceur) */
+.gmaps {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background:
+    repeating-linear-gradient(45deg, rgba(25,26,94,.05) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(-45deg, rgba(25,26,94,.05) 0 1px, transparent 1px 26px),
+    var(--papier-2);
+  border: 3px solid var(--encre);
+  overflow: hidden;
+}
+.gmaps iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.gmaps-voile {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: .55rem;
+  padding: clamp(1.2rem, 4vw, 2.4rem);
+  color: var(--encre);
+}
+.gmaps-pin { width: clamp(34px, 4.5vw, 48px); color: #B03A2E; }
+.gmaps-titre {
+  font-family: var(--ff-titre);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 1rem + .8vw, 1.6rem);
+  margin: 0;
+}
+.gmaps-note {
+  font-size: .78rem;
+  line-height: 1.55;
+  max-width: 40ch;
+  color: var(--encre-2);
+  margin: 0 0 .6rem;
+}
+.gmaps-charger { background: var(--encre); border-color: var(--encre); color: var(--papier); }
+.gmaps-alt {
+  font-size: .74rem;
+  font-weight: 500;
+  color: var(--encre-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.gmaps.est-chargee .gmaps-voile { display: none; }
+
+/* plan : affichette crème punaisée */
+.plan {
+  position: relative;
+  background: var(--papier);
+  color: var(--encre);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  transform: rotate(1.4deg);
+  box-shadow: 14px 18px 40px rgba(0,0,0,.45);
+}
+.plan svg { width: 100%; height: auto; display: block; }
+.plan-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.3rem; }
+.plan .btn { background: var(--encre); border-color: var(--encre); color: var(--papier); }
+.plan .btn--contour { background: transparent; color: var(--encre); }
+.plan .btn--contour:hover { background: var(--encre); color: var(--papier); }
+.plan .mention { color: var(--encre-2); }
+
+/* ---------- PIED ----------------------------------------------------------- */
+.pied {
+  background: var(--nuit);
+  border-top: 3px solid var(--or);
+  padding-top: clamp(3rem, 6vw, 5rem);
+  position: relative;
+  overflow: hidden;
+}
+.pied-mot {
+  font-family: var(--ff-titre);
+  font-weight: 800;
+  font-size: clamp(3.4rem, 1rem + 14vw, 12rem);
+  line-height: .8;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(201,172,98,.55);
+  letter-spacing: -.02em;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  transform: rotate(-1.2deg);
+}
+.pied-grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 2.2rem 2rem;
+  padding-bottom: 3rem;
+}
+.pied-grille h2 {
+  font-family: var(--ff-texte);
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--or);
+  margin-bottom: 1rem;
+}
+.pied-grille ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+.pied-grille a { color: var(--craie); text-decoration: none; font-size: .92rem; transition: color var(--t-court); }
+.pied-grille a:hover { color: var(--or-vif); }
+.pied-grille p { font-size: .92rem; color: var(--craie); }
+
+.avertissement-alcool {
+  background: var(--or);
+  color: var(--nuit);
+  padding: 1rem 0;
+  text-align: center;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.pied-bas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem 1.8rem;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 1.5rem 1.9rem;
+  font-size: .76rem;
+  color: var(--craie-2);
+}
+.pied-bas nav { display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; }
+.pied-bas a { color: var(--craie-2); text-decoration: none; }
+.pied-bas a:hover { color: var(--or-vif); }
+
+/* ---------- PAGE CARTE ------------------------------------------------------ */
+.carte-hero {
+  position: relative;
+  background: var(--pierre);
+  color: var(--boiserie);
+  padding: clamp(8rem, 16vh, 11rem) 0 clamp(2.6rem, 5vw, 4rem);
+  overflow: hidden;
+}
+.carte-hero .conteneur { position: relative; z-index: 1; }
+.carte-hero .sur-titre { color: #B03A2E; }
+.carte-hero .titre-section { color: var(--boiserie); transform: rotate(-1.5deg); text-shadow: .04em .04em 0 var(--or); }
+.carte-hero .titre-section em { color: #B03A2E; }
+.carte-hero .chapeau { max-width: 56ch; margin-top: 1.4rem; }
+
+.carte-nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--encre);
+  color: var(--papier);
+}
+.carte-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: .85rem var(--marge);
+  display: flex;
+  gap: 1.7rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.carte-nav ul::-webkit-scrollbar { display: none; }
+.carte-nav a {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(241,235,221,.72);
+  white-space: nowrap;
+  padding-block: .3rem;
+  border-bottom: 2px solid transparent;
+  transition: color var(--t-court), border-color var(--t-court);
+}
+.carte-nav a:hover, .carte-nav a.est-actif { color: var(--or-vif); border-bottom-color: var(--or-vif); }
+
+/* corps de carte : papier crème */
+.carte-corps {
+  background: var(--papier);
+  color: var(--encre);
+}
+.famille {
+  padding-block: clamp(3rem, 6vw, 5rem);
+  border-bottom: 3px solid var(--encre);
+  scroll-margin-top: 5rem;
+}
+.famille:last-of-type { border-bottom: 0; }
+.famille-tete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .8rem 1.6rem;
+  margin-bottom: 2rem;
+}
+.famille-tete h2 { font-size: clamp(2.1rem, 1.3rem + 3.4vw, 3.8rem); }
+.famille-tete .f-prix { font-family: var(--ff-titre); font-weight: 700; font-size: clamp(1.2rem, 1rem + .8vw, 1.8rem); color: #B03A2E; }
+.famille-tete .f-note {
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: #B03A2E;
+}
+.famille-corps { columns: 2; column-gap: clamp(2.4rem, 5vw, 5rem); }
+.famille-corps .liste-prix li { break-inside: avoid; }
+.famille--simple .famille-corps { columns: 1; max-width: 640px; }
+
+.sous-titre-carte {
+  font-family: var(--ff-titre);
+  font-weight: 700;
+  font-size: 1.35rem;
+  margin: 1.8rem 0 .4rem;
+  break-after: avoid;
+}
+.sous-titre-carte:first-child { margin-top: 0; }
+
+.carte-avis {
+  margin-top: 2.6rem;
+  padding: 1.5rem 1.7rem;
+  border: 3px solid var(--encre);
+  box-shadow: 7px 7px 0 var(--encre);
+  font-size: .88rem;
+  line-height: 1.65;
+  background: var(--papier-2);
+}
+.carte-avis strong { font-weight: 600; }
+
+/* citation du barman : encart affiche bleu, penché */
+.mot-barman {
+  margin-block: clamp(2.6rem, 5vw, 4rem);
+  padding: clamp(2rem, 4.5vw, 3.2rem);
+  background: var(--boiserie);
+  color: #fff;
+  position: relative;
+  transform: rotate(-1.2deg);
+  box-shadow: 12px 14px 34px rgba(25,26,94,.3);
+}
+.mot-barman::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--grain);
+  background-size: 240px;
+  opacity: .13;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.mot-barman p {
+  font-family: var(--ff-titre);
+  font-size: clamp(1.2rem, 1rem + 1.3vw, 2rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.35;
+  max-width: 44ch;
+  position: relative;
+  z-index: 1;
+}
+.mot-barman cite {
+  display: block;
+  margin-top: 1.2rem;
+  font-family: var(--ff-texte);
+  font-style: normal;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--or-pale);
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- PAGES JURIDIQUES ------------------------------------------------ */
+.juridique {
+  background: var(--papier);
+  color: var(--encre);
+  padding: clamp(8rem, 15vh, 11rem) 0 clamp(4rem, 8vw, 7rem);
+}
+.juridique .conteneur { width: min(100% - (var(--marge) * 2), 820px); }
+.juridique h1 { font-size: clamp(2.4rem, 1.4rem + 4vw, 4.4rem); margin-bottom: .8rem; }
+.juridique .maj {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #B03A2E;
+  margin-bottom: 3rem;
+}
+.juridique h2 {
+  font-size: clamp(1.3rem, 1.1rem + 1vw, 1.8rem);
+  margin: 3rem 0 1rem;
+  padding-top: 1.6rem;
+  border-top: 3px solid var(--encre);
+}
+.juridique h3 { font-family: var(--ff-texte); font-size: .95rem; font-weight: 600; letter-spacing: .04em; margin: 1.8rem 0 .5rem; }
+.juridique p, .juridique li { font-size: .96rem; line-height: 1.75; }
+.juridique ul, .juridique ol { padding-left: 1.2rem; margin: 0 0 1.15em; }
+.juridique li { margin-bottom: .4rem; }
+.juridique dl { margin: 0 0 1.2em; }
+.juridique dt { font-weight: 600; margin-top: .8rem; font-size: .9rem; }
+.juridique dd { margin: .1rem 0 0; font-size: .96rem; }
+.juridique .todo {
+  background: rgba(176,58,46,.1);
+  border: 1px dashed #B03A2E;
+  color: #B03A2E;
+  padding: .1em .5em;
+  font-size: .85em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.juridique .encadre {
+  border: 3px solid var(--encre);
+  box-shadow: 6px 6px 0 var(--encre);
+  padding: 1.1rem 1.4rem;
+  margin: 1.6rem 0;
+  background: var(--papier-2);
+  font-size: .9rem;
+}
+.juridique .lien { text-decoration-color: #B03A2E; }
+.juridique .btn { background: var(--encre); border-color: var(--encre); color: var(--papier); }
+.juridique .btn--contour { background: transparent; color: var(--encre); }
+.juridique .btn--contour:hover { background: var(--encre); color: var(--papier); }
+
+/* ---------- Responsive ------------------------------------------------------- */
+@media (max-width: 1080px) {
+  .comptoir-grille, .gin-grille, .prog-grille, .lieu-grille, .infos-grille {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .comptoir-programme { position: static; }
+  .hero-grille { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
+  .hero-photo { max-width: 440px; }
+  .hero-photo .tampon { right: -5%; top: -10%; }
+}
+
+@media (max-width: 860px) {
+  .nav-bureau { display: none; }
+  .burger { display: block; }
+  .gin-liste { columns: 1; }
+  .famille-corps { columns: 1; }
+  .hero { min-height: auto; }
+  .affiche-flyer, .plan, .mot-barman,
+  .polaroid, .hero-photo .polaroid { transform: none; }
+}
+
+@media (max-width: 600px) {
+  .hero-titre .ht-bar { letter-spacing: .4em; }
+  .hero-photo .tampon { width: 96px; right: 0; top: -12%; }
+  .hero-sur::after { flex-basis: 60px; }
+}
+
+@media (max-width: 640px) {
+  /* la carte Google prend plus de hauteur sur petit écran
+     pour rester manipulable au doigt */
+  .gmaps { aspect-ratio: 3 / 4; max-height: 480px; }
+  .gmaps-note { font-size: .72rem; max-width: 32ch; }
+  .plan { padding: 1rem; }
+  .plan-actions .btn { flex: 1 1 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .btn { padding: .95rem 1.4rem; font-size: .7rem; letter-spacing: .18em; }
+  .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
+  .hero-pied .conteneur { flex-direction: column; gap: .45rem; }
+  .equerres::before, .equerres::after { width: 20px; height: 20px; border-width: 2px; }
+  .comptoir-programme { box-shadow: 5px 5px 0 var(--encre); }
+  .polaroid { padding: 10px 10px 48px; }
+}
+
+/* ---------- Ouverture du site ----------------------------------------------
+   Rideau bleu boiserie avec le lockup or, puis levée cinématique.
+   Affiché uniquement si JS est présent (sinon aucun voile), et jamais si
+   l'utilisateur préfère réduire les animations. ----------------------------- */
+.intro { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: var(--boiserie);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    transform: translateY(0);
+    transition: transform .95s cubic-bezier(.65,0,.2,1);
+  }
+  .js .intro::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--grain);
+    background-size: 240px;
+    opacity: .12;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  .intro-lockup {
+    display: flex;
+    align-items: baseline;
+    gap: .35em;
+    margin: 0;
+    font-family: var(--ff-titre);
+    color: var(--or-vif);
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .85s cubic-bezier(.22,.61,.2,1), transform .85s cubic-bezier(.22,.61,.2,1);
+  }
+  .intro-lockup .il-le  { font-style: italic; font-weight: 400; font-size: clamp(1.3rem, 3vw, 2.2rem); }
+  .intro-lockup .il-nom { font-weight: 800; font-size: clamp(3.2rem, 9vw, 6.5rem); letter-spacing: -.02em; }
+  .intro-lockup .il-bar { font-weight: 600; font-size: clamp(1.1rem, 2.4vw, 1.8rem); }
+
+  .intro-filet {
+    width: clamp(120px, 18vw, 260px);
+    height: 2px;
+    background: var(--or);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform .7s cubic-bezier(.65,0,.2,1) .35s;
+  }
+
+  .intro-lieu {
+    margin: 0;
+    font-size: clamp(.62rem, .58rem + .2vw, .76rem);
+    font-weight: 500;
+    letter-spacing: .4em;
+    text-transform: uppercase;
+    color: var(--or-pale);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .7s cubic-bezier(.22,.61,.2,1) .45s, transform .7s cubic-bezier(.22,.61,.2,1) .45s;
+  }
+
+  .js .intro.est-prete .intro-lockup,
+  .js .intro.est-prete .intro-lieu { opacity: 1; transform: none; }
+  .js .intro.est-prete .intro-filet { transform: scaleX(1); }
+
+  .js .intro.est-levee { transform: translateY(-101%); }
+}
+
+/* ---------- Apparitions au défilement --------------------------------------
+   Sobres et cinématiques : un seul mouvement lent par bloc, easing doux,
+   pas de cascade décorative. Les objets « imprimés » (photo, flyer, plan)
+   se dévoilent par un balayage vertical (clip-path), sans toucher à leur
+   rotation. Actif uniquement si JS présent et si l'utilisateur n'a pas
+   demandé la réduction des animations. ------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .js .rv {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 1.05s cubic-bezier(.22,.61,.2,1),
+      transform 1.05s cubic-bezier(.22,.61,.2,1);
+    transition-delay: var(--rd, 0ms);
+  }
+  .js .rv.est-vu { opacity: 1; transform: none; }
+
+  /* balayage — ne modifie pas transform : compatible avec les rotations */
+  .js .rv-clip {
+    /* marges négatives : ne rogne ni les ombres portées ni le tampon qui déborde */
+    clip-path: inset(-16% -14% 101% -14%);
+    transition: clip-path 1.25s cubic-bezier(.65,0,.2,1);
+    transition-delay: var(--rd, 0ms);
+  }
+  .js .rv-clip.est-vu { clip-path: inset(-16% -14% -14% -14%); }
+
+  .rv--d1 { --rd: 140ms; }
+  .rv--d2 { --rd: 260ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+@media print {
+  .entete, .menu-mobile, .carte-nav, .bandeau, .plan-actions, .btn, body::after { display: none !important; }
+  body { background: #fff; color: #000; }
+  a { color: #000; text-decoration: underline; }
+}

@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://le13or-bar.fr/sitemap.xml
+Sitemap: https://le13or-site.vercel.app/sitemap.xml
